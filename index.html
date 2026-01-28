@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Maresias Barbearia & Streetwear</title>
+
+    <!-- Tailwind CSS (Estilização) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Lucide Icons (Ícones) -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;600;700;900&display=swap"
+        rel="stylesheet">
+
+    <!-- Configurações Tailwind para cores personalizadas -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        maresias: {
+                            blue: '#2563eb', // Azul Royal
+                            dark: '#0f0f10', // Fundo quase preto
+                            card: '#18181b', // Cinza escuro
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                        heading: ['Bebas Neue', 'sans-serif'],
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-out forwards',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Estilos globais e resets */
+        body {
+            background-color: #000;
+            color: #fff;
+            -webkit-tap-highlight-color: transparent;
+            /* Remove highlight azul no mobile */
+        }
+
+        /* Ocultar barra de rolagem mas manter funcionalidade */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Animações customizadas */
+        @keyframes loadingBar {
+            0% {
+                width: 0%
+            }
+
+            50% {
+                width: 70%
+            }
+
+            100% {
+                width: 100%
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-loading-bar {
+            animation: loadingBar 3.5s ease-out forwards;
+        }
+    </style>
+</head>
+
+<body class="antialiased min-h-screen pb-24">
+
+    <!-- TELA DE CARREGAMENTO (SPLASH SCREEN) -->
+    <div id="loading-screen" class="fixed inset-0 z-50 bg-black flex flex-col items-center justify-end pb-16 transition-opacity duration-700">
+        <!-- GIF de Fundo (Full Screen) -->
+        <div class="absolute inset-0 z-0">
+            <img src="0128.gif" alt="Carregando Maresias" class="w-full h-full object-cover"
+                onerror="this.style.display='none'; document.getElementById('fallback-loader').classList.remove('hidden'); document.getElementById('fallback-loader').classList.add('flex');">
+            <!-- Overlay Gradiente para leitura do texto -->
+            <div class="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent"></div>
+        </div>
+
+        <!-- Fallback (Caso o GIF falhe) -->
+        <div id="fallback-loader" class="hidden absolute inset-0 z-10 items-center justify-center bg-black">
+            <div class="text-maresias-blue text-5xl font-heading tracking-widest animate-bounce">
+                MARESIAS
+            </div>
+        </div>
+
+        <!-- Barra de Progresso e Texto (Sobrepostos) -->
+        <div class="relative z-20 flex flex-col items-center w-full px-12 space-y-4">
+            <div class="w-full h-1 bg-white/20 rounded-full overflow-hidden backdrop-blur-sm">
+                <div class="h-full bg-maresias-blue animate-loading-bar shadow-[0_0_15px_#2563eb]"></div>
+            </div>
+            <p class="text-white font-heading text-lg tracking-[0.2em] uppercase animate-pulse">Carregando Estilo...</p>
+        </div>
+    </div>
+
+    <!-- NAVBAR (Topo Fixo) -->
+    <nav
+        class="fixed top-0 w-full z-40 bg-black/95 backdrop-blur-md border-b border-gray-800 transition-all duration-300">
+        <div class="max-w-md mx-auto px-4 h-16 flex items-center justify-between">
+            <!-- Logo (Clicável para voltar ao Início) -->
+            <div class="flex items-center gap-2 cursor-pointer" onclick="switchTab('home')">
+                <img src="maresias_logo_contorno (1).png" alt="Maresias Logo" class="h-10 w-auto">
+            </div>
+
+            <!-- Botão Único CTA -->
+            <div>
+                <button onclick="toggleStoreMode()" id="nav-cta-btn"
+                    class="px-5 py-2 rounded-full text-xs font-bold uppercase transition-all bg-maresias-blue text-white shadow-lg shadow-blue-900/50 hover:bg-blue-600 active:scale-95 flex items-center gap-2">
+                    <span id="nav-cta-text">ACESSE NOSSA LOJA</span>
+                    <i data-lucide="shopping-bag" class="w-4 h-4"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="pt-20 max-w-md mx-auto px-4">
+
+        <!-- VIEW: HOME (Centralizador de Links) -->
+        <div id="home-view" class="space-y-8 animate-fade-in">
+
+            <!-- Hero Header -->
+            <div class="text-center pt-4">
+                <div class="relative inline-block mb-6">
+                    <div class="absolute inset-0 bg-maresias-blue blur-2xl opacity-20 rounded-full scale-110"></div>
+                    <img src="maresias_logo_preenchimento (1).png" alt="Logo Maresias"
+                        class="relative w-40 h-40 object-contain mx-auto"
+                        onerror="this.src='https://placehold.co/200x200/111/3b82f6?text=Maresias'">
+                </div>
+                <h1 class="font-heading text-5xl font-normal text-white uppercase leading-none tracking-wider">
+                    Maresias<br />
+                    <span class="text-maresias-blue text-6xl">Barbearia</span>
+                </h1>
+                <p class="text-gray-400 text-sm mt-4 px-6 leading-relaxed font-light">
+                    Estilo streetwear e cortes de alta performance. Onde a rua encontra a excelência em Fernandópolis.
+                </p>
+            </div>
+
+            <!-- Lista de Links -->
+            <div class="space-y-3" id="links-container">
+                <!-- Links serão injetados via JS -->
+            </div>
+
+            <!-- Localização -->
+            <div class="p-5 bg-maresias-card border border-gray-800 rounded-2xl text-center">
+                <i data-lucide="map-pin" class="mx-auto text-maresias-blue mb-2 w-6 h-6"></i>
+                <p class="text-gray-300 text-sm font-medium mb-3">Av. Líbero de Almeida Silvares, 2448 - Fernandópolis
+                </p>
+                <a href="https://maps.google.com/?q=Maresias Barbearia Fernandópolis" target="_blank"
+                    class="inline-flex items-center text-xs font-bold text-maresias-blue uppercase tracking-wider hover:underline">
+                    Abrir no Maps <i data-lucide="arrow-up-right" class="ml-1 w-3 h-3"></i>
+                </a>
+            </div>
+
+            <!-- Equipe -->
+            <div>
+                <h2 class="text-xl font-heading text-white mb-4 flex items-center gap-2 tracking-wide">
+                    <i data-lucide="scissors" class="text-maresias-blue w-5 h-5"></i>
+                    Nossa Equipe
+                </h2>
+                <div class="grid grid-cols-2 gap-3" id="team-grid">
+                    <!-- Equipe injetada via JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW: LOJA (Streetwear) -->
+        <div id="store-view" class="hidden space-y-6 animate-fade-in">
+
+            <!-- Banner Loja -->
+            <div class="relative h-48 rounded-2xl overflow-hidden group">
+                <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent z-10"></div>
+                <img src="https://images.unsplash.com/photo-1523398002811-999ca8dec234?auto=format&fit=crop&q=80&w=600"
+                    class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-70"
+                    alt="Banner Loja">
+                <div class="absolute bottom-4 left-4 z-20">
+                    <span
+                        class="bg-maresias-blue text-white text-[10px] font-bold px-2 py-0.5 rounded mb-1 inline-block uppercase tracking-wider font-sans">Fase
+                        2</span>
+                    <h2 class="text-3xl font-heading uppercase italic leading-none tracking-wider">
+                        Streetwear<br />Collection</h2>
+                </div>
+            </div>
+
+            <!-- Filtros (Scroll Horizontal) -->
+            <div class="flex gap-3 overflow-x-auto pb-2 hide-scrollbar">
+                <button
+                    class="px-5 py-2 rounded-full text-xs font-bold whitespace-nowrap bg-white text-black transition-transform active:scale-95">Todos</button>
+                <button
+                    class="px-5 py-2 rounded-full text-xs font-bold whitespace-nowrap bg-maresias-card text-gray-400 border border-gray-800 transition-transform active:scale-95">Camisetas</button>
+                <button
+                    class="px-5 py-2 rounded-full text-xs font-bold whitespace-nowrap bg-maresias-card text-gray-400 border border-gray-800 transition-transform active:scale-95">Tênis</button>
+                <button
+                    class="px-5 py-2 rounded-full text-xs font-bold whitespace-nowrap bg-maresias-card text-gray-400 border border-gray-800 transition-transform active:scale-95">Acessórios</button>
+            </div>
+
+            <!-- Grid Produtos -->
+            <div class="grid grid-cols-2 gap-3" id="products-grid">
+                <!-- Produtos injetados via JS -->
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center py-10 text-gray-600 text-[10px] mt-8 border-t border-gray-900 bg-black">
+        <img src="maresias_logo_contorno (1).png" alt="Maresias Logo" class="h-8 w-auto mx-auto mb-4 opacity-50">
+        <p class="font-heading text-lg text-gray-500 mb-1 tracking-widest uppercase">MARESIAS BARBEARIA</p>
+        <p class="tracking-widest opacity-60">© 2026 TODOS OS DIREITOS RESERVADOS.</p>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // --- DADOS (Fácil de editar) ---
+
+        const LINKS = [
+            {
+                title: "Agendar Horário",
+                subtitle: "Reserve seu corte online",
+                url: "https://sites.appbarber.com.br/maresiasbarbearia",
+                icon: "calendar",
+                primary: true
+            },
+            {
+                title: "WhatsApp",
+                subtitle: "Fale com a gente",
+                url: "https://wa.me/5517996562457",
+                icon: "message-circle",
+                primary: false
+            },
+            {
+                title: "Instagram",
+                subtitle: "@maresiasbarbearia",
+                url: "https://www.instagram.com/maresiasbarbearia/",
+                icon: "instagram",
+                primary: false
+            }
+        ];
+
+        const TEAM = [
+            { name: 'Adryan', role: 'Barbeiro' },
+            { name: 'Narita', role: 'Barbeiro' },
+            { name: 'João', role: 'Barbeiro' },
+            { name: 'Kids', role: 'Especialista Infantil' },
+        ];
+
+        const PRODUCTS = [
+            { name: 'Camiseta Oversized', price: 'R$ 89,90', cat: 'Roupas', img: 'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?auto=format&fit=crop&q=80&w=300' },
+            { name: 'Air Street Runner', price: 'R$ 299,90', cat: 'Tênis', img: 'https://images.unsplash.com/photo-1552346154-21d32810aba3?auto=format&fit=crop&q=80&w=300' },
+            { name: 'Boné Trucker Logo', price: 'R$ 59,90', cat: 'Acessórios', img: 'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?auto=format&fit=crop&q=80&w=300' },
+            { name: 'Moletom Urban', price: 'R$ 149,90', cat: 'Roupas', img: 'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&q=80&w=300' },
+        ];
+
+        // --- FUNÇÕES ---
+
+        function init() {
+            // 1. Splash Screen Logic
+            setTimeout(() => {
+                const loader = document.getElementById('loading-screen');
+                loader.style.opacity = '0';
+                loader.style.transition = 'opacity 0.5s ease';
+                setTimeout(() => {
+                    loader.style.display = 'none';
+                }, 500);
+            }, 3500); // 3.5 segundos igual ao GIF
+
+            // 2. Renderizar Conteúdo
+            renderLinks();
+            renderTeam();
+            renderProducts();
+
+            // 3. Inicializar Ícones
+            lucide.createIcons();
+        }
+
+        // Render Links
+        function renderLinks() {
+            const container = document.getElementById('links-container');
+            LINKS.forEach(link => {
+                const isPrimary = link.primary;
+                const classes = isPrimary
+                    ? 'bg-gradient-to-r from-blue-700 to-blue-900 border-blue-600 shadow-lg shadow-blue-900/40'
+                    : 'bg-maresias-card border-gray-800 hover:border-gray-600';
+
+                const html = `
+                    <a href="${link.url}" target="_blank" class="${classes} relative w-full p-4 rounded-xl flex items-center justify-between group border transition-all active:scale-[0.98]">
+                        <div class="flex items-center gap-4 z-10">
+                            <div class="p-2.5 rounded-lg ${isPrimary ? 'bg-white/10 text-white' : 'bg-gray-800 text-maresias-blue'}">
+                                <i data-lucide="${link.icon}" class="w-6 h-6"></i>
+                            </div>
+                            <div class="text-left">
+                                <h3 class="font-bold text-base text-white leading-tight">${link.title}</h3>
+                                <p class="text-xs ${isPrimary ? 'text-blue-100' : 'text-gray-400'}">${link.subtitle}</p>
+                            </div>
+                        </div>
+                        <i data-lucide="chevron-right" class="${isPrimary ? 'text-white' : 'text-gray-600'} w-5 h-5"></i>
+                    </a>
+                `;
+                container.innerHTML += html;
+            });
+        }
+
+        // Render Team
+        function renderTeam() {
+            const container = document.getElementById('team-grid');
+            TEAM.forEach(member => {
+                const html = `
+                    <div class="bg-maresias-card p-3 rounded-xl border border-gray-800 text-center">
+                        <div class="w-12 h-12 bg-gray-800 rounded-full mx-auto mb-2 flex items-center justify-center text-xl">💈</div>
+                        <h3 class="text-white font-bold text-sm">${member.name}</h3>
+                        <p class="text-[10px] text-gray-500 uppercase font-bold tracking-wide">${member.role}</p>
+                    </div>
+                `;
+                container.innerHTML += html;
+            });
+        }
+
+        // Render Products
+        function renderProducts() {
+            const container = document.getElementById('products-grid');
+            PRODUCTS.forEach(product => {
+                const html = `
+                    <div class="bg-maresias-card rounded-xl overflow-hidden border border-gray-800 group">
+                        <div class="relative aspect-[4/5] bg-gray-800">
+                            <img src="${product.img}" alt="${product.name}" class="w-full h-full object-cover">
+                            <button class="absolute bottom-2 right-2 bg-maresias-blue p-2 rounded-full text-white shadow-lg active:scale-90 transition-transform">
+                                <i data-lucide="shopping-bag" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                        <div class="p-3">
+                            <span class="text-[10px] text-gray-500 uppercase font-bold tracking-wider block mb-1">${product.cat}</span>
+                            <h3 class="text-white font-bold text-xs leading-tight mb-1 line-clamp-2">${product.name}</h3>
+                            <p class="text-maresias-blue font-bold text-sm">${product.price}</p>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += html;
+            });
+        }
+
+        // Nova Lógica de Toggle
+        window.toggleStoreMode = function() {
+            const homeView = document.getElementById('home-view');
+            // Se a home não está escondida, vamos para a loja
+            if (!homeView.classList.contains('hidden')) {
+                switchTab('store');
+            } else {
+                switchTab('home');
+            }
+        }
+
+        // Tab Switching Logic
+        window.switchTab = function (tabName) {
+            const homeView = document.getElementById('home-view');
+            const storeView = document.getElementById('store-view');
+            const ctaBtn = document.getElementById('nav-cta-btn');
+            const ctaText = document.getElementById('nav-cta-text');
+
+            if (tabName === 'home') {
+                homeView.classList.remove('hidden');
+                storeView.classList.add('hidden');
+
+                // Reseta o botão para o estado inicial
+                ctaText.innerText = "ACESSE NOSSA LOJA";
+                ctaBtn.classList.add('bg-maresias-blue', 'text-white', 'shadow-blue-900/50');
+                ctaBtn.classList.remove('bg-gray-800', 'text-gray-300');
+                
+            } else {
+                homeView.classList.add('hidden');
+                storeView.classList.remove('hidden');
+
+                // Muda o botão para "Voltar"
+                ctaText.innerText = "VOLTAR AO INÍCIO";
+                ctaBtn.classList.remove('bg-maresias-blue', 'text-white', 'shadow-blue-900/50');
+                ctaBtn.classList.add('bg-gray-800', 'text-gray-300');
+            }
+
+            // Re-render icons just in case new content appeared
+            lucide.createIcons();
+
+            // Scroll to top
+            window.scrollTo(0, 0);
+        };
+
+        // Start
+        init();
+
+    </script>
+</body>
+
+</html>
